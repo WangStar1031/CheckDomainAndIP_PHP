@@ -22,9 +22,13 @@
         return (filter_var ('http://' . $domain_name, FILTER_VALIDATE_URL)===FALSE)? FALSE:TRUE;
     }
     $contents = file_get_contents("info.html");
+    if( isset($argv[1])){
+        $contents = file_get_contents($argv[1]);
+    }
     $tempString = str_replace('<li class="softitem">', '<lilili>', $contents);
     $tempString = str_replace('<li class="pathitem">', '<lilili>', $contents);
     $lstTmp = explode("<lilili>", $tempString);
+    $outFName = "output.txt";
     for( $i = 1; $i < count($lstTmp); $i++){
         $curNode =  $lstTmp[$i];
         $arrNodes = explode("</li>", $curNode);
@@ -36,6 +40,7 @@
                 continue;
             }
             if( domain_name($value)){
+                file_put_contents($outFName, $value . "\n", FILE_APPEND);
                 echo "YES";
             } else{
                 echo "NO";
